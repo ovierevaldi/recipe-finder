@@ -1,35 +1,74 @@
 'use client';
 
-import { useState } from "react";
-import IngredientsInput from "./Components/IngredientsInput";
-import ListFood from "./Components/ListFood";
-import DetailFood from "./Components/DetailFood";
+import React from 'react';
+import { BiPlus, BiSearch } from 'react-icons/bi';
+import { RiCloseLine } from 'react-icons/ri';
 
-export default function Home() {
-  const [pageState, setPageState] = useState<'Input' | 'Search' | 'Details'>('Input');
+const IngredientsInput: React.FC = () => {
+    const [ingredientsInputList, setIngredientsInputList] = React.useState<React.FC<IngredientInputProps>[]>([IngredientInput]);
 
-  const onRequestSearchFood = () => { setPageState('Search'); };
+    const addIngredientInput = () => {
+        setIngredientsInputList([...ingredientsInputList, IngredientInput]);
+    };
 
-  const onRequestShowDetails = (id: string) => { 
-    setPageState('Details');
-  };
+    const removeInput = (selectedIndex: number) => {
+        setIngredientsInputList(ingredientsInputList.filter((_, index) => index !== selectedIndex));
+    };
 
-  const setPage = () => {
-    switch (pageState) {
-      case 'Input':
-        return <IngredientsInput requestSearchFood={onRequestSearchFood} />;
-      case 'Search':
-        return <ListFood requestShowDetails={onRequestShowDetails} />;
-      case 'Details':
-        return <DetailFood />;
+    const searchFood = () => {
     }
-  }
+    
+    return (
+        <div className='max-w-md mx-auto p-4 rounded-md space-y-6'>
+            <p className="text-2xl text-center">Enter the ingredients:</p>
 
-  return (
-    <div className="container mx-auto p-4 space-y-8">
-      <h1 className="text-5xl text-center mb-8">Recipe Finder</h1>
-      <p className="text-2xl text-center">One place to suggest what you can cook based on your ingredients!</p>
-      {setPage()}
-    </div>
-  );
+            {
+                ingredientsInputList.map((IngredientInput, index)  => {
+                    return <IngredientInput key={index} requestRemoveInput={() => removeInput(index)}/>
+                })
+            }
+
+            <button 
+                className='block bg-[#D9D9D9] text-[#0a0a0a] p-2 rounded-md w-full'
+                onClick={addIngredientInput}>
+                <div className='flex justify-center items-center'>
+                    <BiPlus /> <span>Ingredient</span>
+                </div>
+            </button>
+            <button
+                className="block bg-[#D9D9D9] text-[#0a0a0a] p-2 rounded-md w-full">
+                <div 
+                    className='flex justify-center items-center'
+                    onClick={searchFood}>
+                    <BiSearch /> <span>Search   </span>
+                </div>
+            </button>
+        </div>
+    );
 };
+
+type IngredientInputProps = {
+    requestRemoveInput: () => void;
+};
+
+const IngredientInput: React.FC<IngredientInputProps> = ({ requestRemoveInput } : IngredientInputProps) => {
+
+    const handleRemoveInput = () => {
+        requestRemoveInput();
+    }
+    return(
+        <div className='flex justify-center items-center space-x-4'>
+            <input
+                type="text"
+                className='block p-2 text-[#0a0a0a] rounded-md w-full text-center'
+                placeholder="Ex: Tomato" />
+            <button
+                className='block bg-[#D9D9D9] text-[#0a0a0a] p-2 rounded-md'
+                onClick={handleRemoveInput}>
+                <RiCloseLine className='text-lg'/>
+            </button>
+        </div>
+    )
+}
+
+export default IngredientsInput;
