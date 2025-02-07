@@ -16,7 +16,7 @@ const Food: React.FC<FoodProps> = ({ food }: FoodProps) => {
     const router = useRouter();
     
     const showDetails = () => {
-        router.push('/food')
+        router.push(`/food/${food.id}?name=${food.name}&image=${food.image}`)
     }
 
     return (

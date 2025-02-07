@@ -36,7 +36,7 @@ const IngredientsInput: React.FC = () => {
   
   return (
     <div className='max-w-md mx-auto p-4 rounded-md space-y-6'>
-      <p className="text-2xl text-center">Enter the ingredients:</p>
+      <p className="text-2xl text-center">Food:</p>
 
       <input
         type="text"

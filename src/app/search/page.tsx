@@ -11,10 +11,15 @@ const ListFood : React.FC = () => {
   const searchedFood = useSearchParams().get('food');
   const isHalal = useSearchParams().get('isHalal');
 
+  //#region Api Call
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     const findRecipe = async () => {
       if(searchedFood){
         try {
+          setIsLoading(true);
+
           const result = await recipeApi().searchRecipe(searchedFood, isHalal === 'true' ? true: false);
   
           if(result){
@@ -23,6 +28,8 @@ const ListFood : React.FC = () => {
   
         } catch (error) {
           console.log(error)        
+        } finally{
+          setIsLoading(false);
         }
       }
     };
@@ -30,11 +37,20 @@ const ListFood : React.FC = () => {
     findRecipe();
   }, [searchedFood])
 
+  //#endregion
+
   return (
+    
+    isLoading ?
+
+    <p className='text-lg text-center'>Loading...</p>
+    
+    :
+
     <div className='grid grid-cols-3 gap-8'>
-        {
-          listFood.map((food) => <Food food={food} key={food.id}/>)
-        }
+      {
+        listFood.map((food) => <Food food={food} key={food.id}/>)
+      }
     </div>
   )
 };
