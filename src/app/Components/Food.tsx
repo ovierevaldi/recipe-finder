@@ -6,8 +6,8 @@ type FoodProps = {
     food: FoodEntity;
 }
 
-type FoodEntity = {
-    id: string
+export type FoodEntity = {
+    id: number
     name: string;
     image: string;
 }

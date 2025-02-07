@@ -1,10 +1,12 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import React from 'react'
 
 const DetailFood: React.FC = () => {
     const router = useRouter();
+
+   
 
     const backToDashboard = () => {
         router.push('/')

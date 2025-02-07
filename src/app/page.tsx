@@ -1,14 +1,18 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import React from 'react';
+import React, { useId, useState } from 'react';
 import { BiPlus, BiSearch } from 'react-icons/bi';
 import { RiCloseLine } from 'react-icons/ri';
 
 const IngredientsInput: React.FC = () => {
   const router = useRouter();
 
+  const isHalalCheckboxID = useId();
+
   const [ingredientsInputList, setIngredientsInputList] = React.useState<React.FC<IngredientInputProps>[]>([IngredientInput]);
+  const [searchedFood, setSearchedFood] = useState('');
+  const [isHalal, setIsHalal] = useState(false);
 
   const addIngredientInput = () => {
     setIngredientsInputList([...ingredientsInputList, IngredientInput]);
@@ -19,26 +23,46 @@ const IngredientsInput: React.FC = () => {
   };
 
   const searchFood = () => {
-    router.push('/search')
-  }
+    router.push(`/search?food=${searchedFood}&isHalal=${isHalal}`)
+  };
+
+  const handleSearch = (keyword: string) => {
+    setSearchedFood(keyword)
+  };
+
+  const handleHalalCheckBox = (checked: boolean) => {
+    setIsHalal(checked);
+  } 
   
   return (
     <div className='max-w-md mx-auto p-4 rounded-md space-y-6'>
       <p className="text-2xl text-center">Enter the ingredients:</p>
 
-      {
+      <input
+        type="text"
+        value={searchedFood}
+        className='block p-2 text-[#0a0a0a] rounded-md w-full text-center'
+        onChange={(e) => handleSearch(e.target.value)}
+        placeholder="Ex: Fried Rice" />
+      {/* {
         ingredientsInputList.map((IngredientInput, index)  => {
             return <IngredientInput key={index} requestRemoveInput={() => removeInput(index)}/>
         })
-      }
+      } */}
 
-      <button 
+      {/* <button 
         className='block bg-[#D9D9D9] text-[#0a0a0a] p-2 rounded-md w-full'
         onClick={addIngredientInput}>
         <div className='flex justify-center items-center'>
             <BiPlus /> <span>Ingredient</span>
         </div>
-      </button>
+      </button> */}
+
+      <label htmlFor={isHalalCheckboxID} className='flex items-center gap-x-2'>
+        Halal?
+        <input type='Checkbox' checked={isHalal} onChange={(e) => handleHalalCheckBox(e.target.checked)}/>
+      </label>
+
       <button
         className="block bg-[#D9D9D9] text-[#0a0a0a] p-2 rounded-md w-full">
         <div 
