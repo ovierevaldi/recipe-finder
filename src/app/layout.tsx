@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Title from "./Components/Title";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,8 +28,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <div className="container mx-auto p-4 space-y-8">
-          <h1 className="text-5xl text-center mb-8">Recipe Finder</h1>
-          <p className="text-2xl text-center">One place to suggest what you can cook based on your ingredients!</p>
+          <Title />
           {children}
         </div>
       </body>
