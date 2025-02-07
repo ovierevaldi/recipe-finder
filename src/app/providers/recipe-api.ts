@@ -31,8 +31,8 @@ const recipeApi = () => {
             console.log(result);
             
             if(result.data){
-                console.log(result.data)
-                const foodList: FoodEntity[] = result.data.results.map((data) => ({id: data.id, name: data.title, image: data.image}));
+                const list = result.data.results as FoodEntity[];
+                const foodList: FoodEntity[] = list.map((data) => ({id: data.id, title: data.title, image: data.image}));
                 return foodList;
             }
 
@@ -41,6 +41,9 @@ const recipeApi = () => {
 
         } catch (error) {
             console.log(error);
+            if(error)
+                void 0;
+            
             throw new Error('Cannot get food')
         }
     };
@@ -64,6 +67,9 @@ const recipeApi = () => {
                 return null;
             }
         } catch (error) {
+            console.log(error);
+            if(error)
+                void 0;
             throw new Error('Cannot get food ingredients');
         }
     } 

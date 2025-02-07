@@ -2,7 +2,7 @@
 
 import recipeApi, { FoodIngredientsProp } from '@/app/providers/recipe-api';
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 
 const DetailFood: React.FC = () => {
     const router = useRouter();
@@ -11,7 +11,6 @@ const DetailFood: React.FC = () => {
     const image = useSearchParams().get('image')
 
     const [ingredients, setIngredients] = useState<FoodIngredientsProp | null>();
-    const [isLoading, setIsLoading] = useState(false);
 
     const backToDashboard = () => {
         router.push('/')
@@ -21,7 +20,6 @@ const DetailFood: React.FC = () => {
         const getIngredients = async () => {
             if(foodId){
               try {
-                setIsLoading(true);
                 const result = await recipeApi().getFoodRecipeByID(parseInt(foodId as string));
         
                 if(result){
@@ -31,8 +29,6 @@ const DetailFood: React.FC = () => {
         
               } catch (error) {
                     console.log(error)        
-              } finally{
-                    setIsLoading(false);
               }
             }
           };
@@ -50,20 +46,19 @@ const DetailFood: React.FC = () => {
                 <div className='space-y-4'>
                     <p className='text-xl font-bold mb-2'>Ingredients:</p>
                     {
-                        isLoading ?
-                        <p className='text-lg text-center'>Loading...</p>
-                        :
-                        <ul className='overflow-auto columns-2'>
-                        {
-                            ingredients?.ingredients.map((ingredient, index) => 
-                                <li key={index} className='mb-2 ml-2'>
-                                    <span>{index + 1}. </span>
-                                    <span className='font-bold'>{ingredient.name}: </span>
-                                    <span>{ingredient.amount.metric.value} {ingredient.amount.metric.unit}</span>
-                                </li>
-                            )
-                        }
-                    </ul>
+                        <Suspense fallback={<div>Loading ingredients...</div>}>
+                            <ul className='overflow-auto columns-2'>
+                                {
+                                    ingredients?.ingredients.map((ingredient, index) => 
+                                        <li key={index} className='mb-2 ml-2'>
+                                            <span>{index + 1}. </span>
+                                            <span className='font-bold'>{ingredient.name}: </span>
+                                            <span>{ingredient.amount.metric.value} {ingredient.amount.metric.unit}</span>
+                                        </li>
+                                    )
+                                }
+                            </ul>
+                        </Suspense>
                     }
                     {/* 
                     <div>
